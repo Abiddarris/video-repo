@@ -1,0 +1,41 @@
+name: Google Drive to GitHub Release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: GitHub Release tag
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  download-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install gdown
+        run: pip install gdown
+
+      - name: Download from Google Drive
+        run: |
+          gdown --fuzzy \
+            "https://drive.google.com/file/d/1-rTptFDkB0CdpE1VbvNzZPyFniSD5OUB/view?usp=drivesdk" \
+            -O "K-On! Movie BD.mp4"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "K-On! Movie BD.mp4" --clobber
+          else
+            gh release create "$TAG" "K-On! Movie BD.mp4" \
+              --title "$TAG" \
+              --notes "Imported from Google Drive"
+          fi
+
