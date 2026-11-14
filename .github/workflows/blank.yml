@@ -23,8 +23,8 @@ jobs:
 
       - name: Download from Google Drive
         run: |
-          gdown --fuzzy \
-            "https://drive.google.com/file/d/1-rTptFDkB0CdpE1VbvNzZPyFniSD5OUB/view?usp=drivesdk" \
+          gdown \
+            "https://drive.google.com/uc?id=1-rTptFDkB0CdpE1VbvNzZPyFniSD5OUB" \
             -O "K-On! Movie BD.mp4"
       - name: Publish GitHub Release
         env:
